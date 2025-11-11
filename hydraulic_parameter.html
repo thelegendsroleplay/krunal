@@ -1,0 +1,31 @@
+<section class="panel-section">
+  <h2>💧 Hydraulic Parameters</h2>
+
+  <div class="cards">
+    <div class="card"><span>Head (m): </span><span id="kpi-head">—</span></div>
+    <div class="card"><span>Flow (m³/s): </span><span id="kpi-flow">—</span></div>
+    <div class="card"><span>Pressure (Pa): </span><span id="kpi-press">—</span></div>
+    <div class="card"><span>Efficiency (%): </span><span id="kpi-eff">—</span></div>
+  </div>
+
+  <div class="chart">
+    <h3>Realtime Hydraulic Trend</h3>
+    <canvas id="liveHydraulicChart"></canvas>
+  </div>
+
+  <div class="table-section">
+    <h3>Recent Samples</h3>
+    <table id="hydraulicTable">
+      <thead>
+        <tr>
+          <th>Time</th>
+          <th>Head (m)</th>
+          <th>Flow (m³/s)</th>
+          <th>Pressure (Pa)</th>
+          <th>Efficiency (%)</th>
+        </tr>
+      </thead>
+      <tbody id="rows"></tbody>
+    </table>
+  </div>
+</section>

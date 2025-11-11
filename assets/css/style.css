@@ -1,0 +1,593 @@
+/* =================== RESET =================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+* {
+
+  margin: 0;
+
+  padding: 0;
+
+  box-sizing: border-box;
+
+  font-family: 'Poppins', sans-serif;
+
+  -webkit-font-smoothing: antialiased;
+
+  -moz-osx-font-smoothing: grayscale;
+
+}
+
+:root{
+
+  --bg: #0a0f1d;
+
+  --panel: rgba(255,255,255,0.05);
+
+  --muted: #9cb4d4;
+
+  --accent: #42b9ff;
+
+  --glass: rgba(10,17,35,0.7);
+
+  --glass-2: rgba(255,255,255,0.07);
+
+  --card-shadow: rgba(0,0,0,0.45);
+
+  --glass-hover: rgba(66,185,255,0.18);
+
+}
+
+/* page */
+
+html, body {
+
+  height: 100%;
+
+}
+
+body {
+
+  display: flex;
+
+  min-height: 100vh;
+
+  background: var(--bg);
+
+  color: #d8e3ff;
+
+  overflow: hidden;
+
+}
+
+/* =================== SIDEBAR =================== */
+
+.sidebar {
+
+  width: 240px;
+
+  background: var(--glass);
+
+  backdrop-filter: blur(14px);
+
+  padding: 22px 18px;
+
+  border-right: 1px solid rgba(255,255,255,0.08);
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 14px;
+
+  flex-shrink: 0;
+
+}
+
+.sidebar h2 {
+
+  color: var(--accent);
+
+  margin-bottom: 6px;
+
+  text-align: center;
+
+  font-weight: 700;
+
+  letter-spacing: 0.2px;
+
+  font-size: 18px;
+
+}
+
+.sidebar ul { list-style: none; padding: 6px 0; display: flex; flex-direction: column; gap: 4px; }
+
+.sidebar li {
+
+  padding: 12px 14px;
+
+  margin-bottom: 4px;
+
+  border-radius: 8px;
+
+  transition: all 0.18s ease;
+
+  color: var(--muted);
+
+  cursor: pointer;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 10px;
+
+  font-weight: 500;
+
+}
+
+.sidebar li svg, .sidebar li .icon { width: 18px; height: 18px; display:inline-block; }
+
+.sidebar li:hover {
+
+  background: var(--glass-hover);
+
+  color: #fff;
+
+  transform: translateX(4px);
+
+}
+
+.sidebar li.active {
+
+  background: rgba(66,185,255,0.12);
+
+  border-left: 4px solid var(--accent);
+
+  color: #fff;
+
+  transform: translateX(0);
+
+}
+
+/* logout style */
+
+.sidebar .logout {
+
+  margin-top: auto;
+
+  padding: 10px 12px;
+
+  background: #dc2626;
+
+  border-radius: 10px;
+
+  color: #fff;
+
+  text-align: center;
+
+  font-weight: 600;
+
+  box-shadow: 0 6px 18px rgba(220,38,38,0.12);
+
+}
+
+/* =================== MAIN =================== */
+
+.main-content {
+
+  padding: 24px;
+
+  flex: 1;
+
+  overflow-y: auto;
+
+  height: 100vh;
+
+  scroll-behavior: smooth;
+
+}
+
+/* custom scrollbar for main content */
+
+.main-content::-webkit-scrollbar{ width: 10px; }
+
+.main-content::-webkit-scrollbar-track{ background: transparent; }
+
+.main-content::-webkit-scrollbar-thumb{
+
+  background: rgba(255,255,255,0.06);
+
+  border-radius: 10px;
+
+  border: 2px solid transparent;
+
+}
+
+/* HEADER */
+
+header {
+
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  padding: 14px;
+
+  background: var(--panel);
+
+  backdrop-filter: blur(10px);
+
+  border-radius: 12px;
+
+  margin-bottom: 18px;
+
+  border: 1px solid var(--glass-2);
+
+}
+
+header h1 {
+
+  background: linear-gradient(90deg, #fff, var(--accent));
+
+  -webkit-background-clip: text;
+
+  color: transparent;
+
+  font-size: 22px;
+
+  font-weight: 700;
+
+  letter-spacing: 0.2px;
+
+}
+
+#theme-toggle {
+
+  background: rgba(255,255,255,0.06);
+
+  border: 1px solid rgba(255,255,255,0.12);
+
+  padding: 8px 12px;
+
+  border-radius: 10px;
+
+  font-size: 18px;
+
+  color: #fff;
+
+  cursor: pointer;
+
+  transition: transform .15s ease;
+
+}
+
+#theme-toggle:active { transform: scale(.98); }
+
+/* =================== TABS (tab links) =================== */
+
+.tab-links {
+
+  display: flex;
+
+  gap: 8px;
+
+  margin-top: 12px;
+
+  margin-bottom: 10px;
+
+  align-items: center;
+
+  flex-wrap: wrap;
+
+}
+
+.tab-link {
+
+  background: transparent;
+
+  border: 1px solid rgba(255,255,255,0.04);
+
+  padding: 8px 12px;
+
+  border-radius: 10px;
+
+  color: var(--muted);
+
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: all .16s ease;
+
+  display: inline-flex;
+
+  gap: 8px;
+
+  align-items: center;
+
+}
+
+.tab-link:hover { transform: translateY(-3px); color: #fff; border-color: rgba(66,185,255,0.12); }
+
+.tab-link.active { background: rgba(66,185,255,0.12); color: #fff; border-color: rgba(66,185,255,0.18); }
+
+/* =================== CARDS =================== */
+
+.cards {
+
+  display: flex;
+
+  gap: 20px;
+
+  margin-top: 12px;
+
+  flex-wrap: wrap;
+
+}
+
+.card {
+
+  flex: 1 1 220px;
+
+  min-width: 200px;
+
+  background: rgba(255,255,255,0.03);
+
+  border-radius: 14px;
+
+  padding: 20px;
+
+  backdrop-filter: blur(10px);
+
+  border: 1px solid rgba(255,255,255,0.06);
+
+  box-shadow: 0 10px 30px var(--card-shadow);
+
+  text-align: center;
+
+  transition: transform .22s ease, box-shadow .22s ease;
+
+}
+
+.card:hover {
+
+  box-shadow: 0 18px 48px rgba(0,0,0,0.62);
+
+  transform: translateY(-6px);
+
+}
+
+.card h3 {
+
+  margin-bottom: 10px;
+
+  color: #7fb8ff;
+
+  font-weight: 600;
+
+}
+
+.card p {
+
+  font-size: 20px;
+
+  font-weight: 700;
+
+  color: #e6f6ff;
+
+}
+
+/* small helper for inline metric label */
+
+.metric-small { font-size: 12px; color: var(--muted); font-weight: 500; }
+
+/* =================== LIVE CHART =================== */
+
+.chart-section {
+
+  margin-top: 22px;
+
+  background: var(--panel);
+
+  padding: 18px;
+
+  border-radius: 14px;
+
+  backdrop-filter: blur(8px);
+
+  border: 1px solid rgba(255,255,255,0.07);
+
+}
+
+.chart-section h2 {
+
+  margin-bottom: 12px;
+
+  color: #7fb8ff;
+
+  font-weight: 600;
+
+}
+
+canvas { width: 100% !important; height: 330px !important; display: block; }
+
+/* =================== TABLE =================== */
+
+.table-section {
+
+  margin-top: 22px;
+
+}
+
+.table-section h2 {
+
+  margin-bottom: 14px;
+
+  color: #7fb8ff;
+
+  font-weight: 600;
+
+}
+
+.table-wrapper {
+
+  overflow: auto;
+
+  border-radius: 12px;
+
+}
+
+/* table visual */
+
+.table-section table {
+
+  width: 100%;
+
+  border-collapse: collapse;
+
+  background: rgba(255,255,255,0.02);
+
+  border-radius: 12px;
+
+  border: 1px solid rgba(255,255,255,0.06);
+
+  overflow: hidden;
+
+  min-width: 700px;
+
+}
+
+.table-section thead th {
+
+  padding: 14px;
+
+  background: rgba(66,185,255,0.16);
+
+  color: #e0f4ff;
+
+  font-size: 13px;
+
+  text-align: center;
+
+  font-weight: 600;
+
+  position: sticky;
+
+  top: 0;
+
+  z-index: 2;
+
+}
+
+.table-section td {
+
+  padding: 12px 14px;
+
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+
+  text-align: center;
+
+  color: #dfefff;
+
+  font-weight: 500;
+
+  font-size: 13px;
+
+}
+
+.table-section tr:hover td {
+
+  background: rgba(66,185,255,0.045);
+
+}
+
+/* =================== TAB CONTENT (slide + fade) =================== */
+
+.tab-content {
+
+  display: block; /* keep block for layout but hidden via opacity/transform */
+
+  opacity: 0;
+
+  transform: translateX(24px) scale(.995);
+
+  pointer-events: none;
+
+  transition: transform .38s cubic-bezier(.2,.9,.2,1), opacity .28s ease;
+
+  will-change: transform, opacity;
+
+}
+
+.tab-content.active {
+
+  opacity: 1;
+
+  transform: translateX(0) scale(1);
+
+  pointer-events: auto;
+
+}
+
+/* small sections inside tabs */
+
+.section-row { display: flex; gap: 18px; align-items: stretch; flex-wrap: wrap; }
+
+/* responsive niceties */
+
+@media (max-width: 980px) {
+
+  .sidebar { width: 200px; padding: 18px; }
+
+  header h1 { font-size: 18px; }
+
+  .card { padding: 16px; }
+
+}
+
+@media (max-width: 720px) {
+
+  body { overflow: auto; }
+
+  .sidebar { position: fixed; left: 0; top: 0; bottom: 0; z-index: 40; transform: translateX(0); width: 72px; padding: 12px; }
+
+  .sidebar h2 { display: none; }
+
+  .sidebar li { padding: 10px; justify-content: center; font-size: 12px; }
+
+  .main-content { margin-left: 72px; padding: 16px; }
+
+  .cards { gap: 12px; }
+
+  .table-section table { min-width: 600px; }
+
+  canvas { height: 260px !important; }
+
+}
+
+/* utilities */
+
+.text-muted { color: var(--muted); font-size: 13px; }
+
+.center { text-align: center; }
+
+/* small accessibility focus style */
+
+.tab-link:focus, .sidebar li:focus, #theme-toggle:focus {
+
+  outline: 3px solid rgba(66,185,255,0.14);
+
+  outline-offset: 3px;
+
+}
+
+/* Optional - directional slide helpers for tab transitions */
+
+.tab-content.from-left { transform: translateX(-18px) scale(.995); opacity: 0; }
+
+.tab-content.from-right { transform: translateX(18px) scale(.995); opacity: 0; }
+
+/* When activated these classes are removed and .active applies (in JS we briefly set direction class then .active) *

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hydraulic Dam Dashboard</title>
+
+  <link rel="stylesheet" href="assets/css/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <h2>🌊 Digital Twin</h2>
+    <ul>
+      <li class="tab-link active" data-tab="dashboard">📊 Dashboard</li>
+      <li class="tab-link" data-tab="hydraulic">💧 Hydraulic Data</li>
+      <li class="tab-link" data-tab="electrical">⚡ Electrical Data</li>
+      <li class="logout">🚪 Logout</li>
+    </ul>
+  </aside>
+
+  <!-- Main -->
+  <main class="main-content">
+    <header>
+      <h1>Hydraulic Dam Control Panel</h1>
+      <button id="theme-toggle">🌗</button>
+    </header>
+
+    <!-- Dashboard -->
+    <div class="tab-content active" id="dashboard">
+      <section class="cards">
+        <div class="card"><h3>Water Level</h3><p id="water-level">82.5 m</p></div>
+        <div class="card"><h3>Flow Rate</h3><p id="flow-rate">320 m³/s</p></div>
+        <div class="card"><h3>Turbine Output</h3><p id="turbine-output">91%</p></div>
+      </section>
+      <section class="chart-section">
+        <h2>Realtime Flow Trend</h2>
+        <canvas id="liveChart"></canvas>
+      </section>
+    </div>
+
+    <!-- Dynamic Tabs -->
+    <div class="tab-content" id="hydraulic"></div>
+    <div class="tab-content" id="electrical"></div>
+  </main>
+
+  <script src="assets/js/main.js"></script>
+
+  <!-- Dynamic loader -->
+  <script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const tabs = document.querySelectorAll(".tab-link");
+    const contents = document.querySelectorAll(".tab-content");
+
+    async function loadTab(targetId, htmlPath, cssPath, jsPath) {
+      try {
+        const res = await fetch(htmlPath);
+        const html = await res.text();
+        document.getElementById(targetId).innerHTML = html;
+
+        if (!document.querySelector(`link[href="${cssPath}"]`)) {
+          const link = document.createElement("link");
+          link.rel = "stylesheet";
+          link.href = cssPath;
+          document.head.appendChild(link);
+        }
+
+        const old = document.querySelector(`script[src="${jsPath}"]`);
+        if (old) old.remove();
+        const script = document.createElement("script");
+        script.src = jsPath;
+        script.defer = true;
+        document.body.appendChild(script);
+      } catch (e) {
+        document.getElementById(targetId).innerHTML = "<p style='color:red'>Failed to load.</p>";
+      }
+    }
+
+    tabs.forEach(tab => {
+      tab.addEventListener("click", async () => {
+        tabs.forEach(t => t.classList.remove("active"));
+        contents.forEach(c => c.classList.remove("active"));
+        tab.classList.add("active");
+        const targetId = tab.dataset.tab;
+        const target = document.getElementById(targetId);
+        target.classList.add("active");
+
+        if (targetId === "electrical") {
+          await loadTab(
+            "electrical",
+            "pages/electrical_parameter.html",
+            "assets/css/electrical_parameter.css",
+            "assets/js/electrical_parameter.js"
+          );
+        } else if (targetId === "hydraulic") {
+          await loadTab(
+            "hydraulic",
+            "pages/hydraulic_parameter.html",
+            "assets/css/hydraulic_parameter.css",
+            "assets/js/hydraulic_parameter.js"
+          );
+        }
+      });
+    });
+  });
+  </script>
+</body>
+</html>
