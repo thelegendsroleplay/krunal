@@ -1,0 +1,12 @@
+{
+  "name": "hydraulic-dam-dashboard",
+  "version": "1.0.0",
+  "description": "Hydraulic Dam Digital Twin Dashboard",
+  "scripts": {
+    "start": "npx http-server -p 8080 -c-1",
+    "dev": "npx http-server -p 8080 -c-1 -o"
+  },
+  "keywords": ["dashboard", "hydraulic", "dam"],
+  "author": "",
+  "license": "MIT"
+}
