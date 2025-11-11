@@ -25,7 +25,7 @@
     console.log("✅ Chart.js is available");
 
     // ========== Theme toggle ==========
-    const themeBtn = document.getElementById("theme-toggle");
+    const themeBtn = document.getElementById("hydraulic-theme-toggle");
     if (themeBtn) {
       themeBtn.addEventListener("click", () => {
         document.body.classList.toggle("light");
@@ -36,15 +36,15 @@
     // ========== Elements ==========
     console.log("🔍 Looking for hydraulic elements...");
 
-    const rows = document.getElementById("rows");
+    const rows = document.getElementById("hydraulic-rows");
     const kHead = document.getElementById("kpi-head");
     const kFlow = document.getElementById("kpi-flow");
     const kEff = document.getElementById("kpi-eff");
     const kPress = document.getElementById("kpi-press");
 
-    const btnToggle = document.getElementById("toggle-run");
-    const selInterval = document.getElementById("interval-ms");
-    const btnClear = document.getElementById("clear-table");
+    const btnToggle = document.getElementById("hydraulic-toggle-run");
+    const selInterval = document.getElementById("hydraulic-interval-ms");
+    const btnClear = document.getElementById("hydraulic-clear-table");
     const canvasEl = document.getElementById("liveHydraulicChart");
 
     console.log("📊 Hydraulic elements found:");
