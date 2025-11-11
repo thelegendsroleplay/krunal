@@ -70,11 +70,17 @@
       console.log(`⚙️ JS path: ${jsPath}`);
 
       // Clean up ALL other tabs (not the target)
-      Object.keys(window.tabCleanupFunctions).forEach(tabId => {
+      const registeredTabs = Object.keys(window.tabCleanupFunctions);
+      console.log(`🔍 Registered tabs for cleanup: [${registeredTabs.join(', ')}]`);
+      console.log(`🎯 Target tab (won't cleanup): ${targetId}`);
+
+      registeredTabs.forEach(tabId => {
         if (tabId !== targetId) {
           console.log(`🧹 Cleaning up ${tabId} tab...`);
           window.tabCleanupFunctions[tabId]();
           delete window.tabCleanupFunctions[tabId];
+        } else {
+          console.log(`ℹ️ Skipping cleanup for ${tabId} (is target)`);
         }
       });
 
