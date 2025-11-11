@@ -1,18 +1,28 @@
 // Wait for DOM to be ready (handles dynamic loading)
 (function() {
+  console.log("🎬 hydraulic_parameter.js loaded");
+
   // Small delay to ensure HTML is fully injected
   setTimeout(() => {
+    console.log("⏱️ hydraulic_parameter.js: setTimeout executed");
+
     const banner = (msg) => {
+      console.log("🚨 Banner:", msg);
       const b = document.createElement('div');
       b.textContent = msg;
       b.style.cssText = 'position:fixed;left:0;right:0;top:0;padding:10px 14px;background:#ff3b30;color:#fff;font:600 14px/1 system-ui;z-index:9999';
       document.body.appendChild(b);
     };
 
+    console.log("📦 Chart.js available:", typeof Chart !== 'undefined');
+
     if (!window.Chart) {
       banner('Chart.js NOT LOADED — check the CDN in <head>.');
+      console.error("❌ Chart.js not available");
       return;
     }
+
+    console.log("✅ Chart.js is available");
 
     // ========== Theme toggle ==========
     const themeBtn = document.getElementById("theme-toggle");
@@ -24,6 +34,8 @@
     }
 
     // ========== Elements ==========
+    console.log("🔍 Looking for hydraulic elements...");
+
     const rows = document.getElementById("rows");
     const kHead = document.getElementById("kpi-head");
     const kFlow = document.getElementById("kpi-flow");
@@ -35,10 +47,24 @@
     const btnClear = document.getElementById("clear-table");
     const canvasEl = document.getElementById("liveChart");
 
+    console.log("📊 Hydraulic elements found:");
+    console.log("  - rows:", !!rows);
+    console.log("  - kHead:", !!kHead);
+    console.log("  - kFlow:", !!kFlow);
+    console.log("  - kEff:", !!kEff);
+    console.log("  - kPress:", !!kPress);
+    console.log("  - btnToggle:", !!btnToggle);
+    console.log("  - selInterval:", !!selInterval);
+    console.log("  - btnClear:", !!btnClear);
+    console.log("  - canvasEl:", !!canvasEl);
+
     if (!canvasEl) {
       banner('Canvas #liveChart NOT FOUND in HTML.');
+      console.error("❌ Canvas element not found!");
       return;
     }
+
+    console.log("✅ All required elements found");
 
     // ========== Random sample generator ==========
     function sample() {
@@ -52,11 +78,15 @@
     }
 
     // ========== Chart.js live moving graph ==========
+    console.log("🔨 Creating hydraulic chart...");
+
     const ctx = canvasEl.getContext("2d");
     const labels = [];
     const headData = [];
     const flowData = [];
     const effData = [];
+
+    console.log("📊 Creating Chart instance...");
 
     const chart = new Chart(ctx, {
       type: "line",
@@ -135,9 +165,13 @@
       timer = null;
     }
 
+    console.log("✅ Hydraulic chart created successfully");
+
     // Default start
+    console.log("🚀 Starting hydraulic data updates...");
     pushRow();
     startLoop();
+    console.log("✅ hydraulic_parameter.js initialization complete");
 
     // Controls
     if (btnToggle) {

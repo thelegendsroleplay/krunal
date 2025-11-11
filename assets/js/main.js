@@ -1,12 +1,18 @@
 // =================== SAFE DOM HELPERS ===================
+console.log("🎬 main.js loaded");
 
 const $ = (sel, ctx = document) => ctx.querySelector(sel);
 const $$ = (sel, ctx = document) => Array.from(ctx.querySelectorAll(sel));
 
 // =================== THEME TOGGLE (persistent) ===================
+console.log("🎨 Initializing theme toggle");
 
 const themeBtn = document.getElementById("theme-toggle");
+console.log("🔘 Theme button found:", !!themeBtn);
+
 const savedTheme = localStorage.getItem("site-theme"); // 'light' or 'dark'
+console.log("💾 Saved theme:", savedTheme);
+
 if (savedTheme === "light") document.body.classList.add("light");
 
 if (themeBtn) {
@@ -24,12 +30,20 @@ if (themeBtn) {
 }
 
 // =================== CHART.JS SETUP (robust) ===================
+console.log("📊 Initializing Chart.js");
+console.log("📦 Chart.js available:", typeof Chart !== 'undefined');
 
 const canvasEl = document.getElementById("liveChart");
+console.log("🎨 Canvas element found:", !!canvasEl);
+
 let liveChart = null;
 
 function createChart() {
-  if (!canvasEl) return null;
+  console.log("🔨 Creating chart...");
+  if (!canvasEl) {
+    console.warn("⚠️ No canvas element found for dashboard chart");
+    return null;
+  }
   const ctx = canvasEl.getContext("2d");
 
   if (liveChart && typeof liveChart.destroy === "function") {
@@ -70,17 +84,25 @@ function createChart() {
     }
   });
 
+  console.log("✅ Chart created successfully");
   return liveChart;
 }
 
-createChart();
+const chartResult = createChart();
+console.log("📊 Chart initialization result:", !!chartResult);
 
 // =================== LIVE TABLE + CARDS UPDATE ===================
+console.log("🔄 Setting up live data updates");
 
 const tbody = document.getElementById("data-body");
 const elWaterLevel = document.getElementById("water-level");
 const elFlowRate = document.getElementById("flow-rate");
 const elTurbineOutput = document.getElementById("turbine-output");
+
+console.log("📊 Dashboard elements found:");
+console.log("  - Water Level:", !!elWaterLevel);
+console.log("  - Flow Rate:", !!elFlowRate);
+console.log("  - Turbine Output:", !!elTurbineOutput);
 
 const formatNumber = (v, decimals = 2) => Number(v).toFixed(decimals);
 
@@ -123,8 +145,10 @@ function addLiveData() {
 }
 
 const INTERVAL_MS = 1500;
+console.log(`⏱️ Starting live data updates every ${INTERVAL_MS}ms`);
 let liveInterval = setInterval(addLiveData, INTERVAL_MS);
 addLiveData();
+console.log("✅ main.js initialization complete");
 
 window._dashboard = {
   addLiveData,
