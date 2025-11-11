@@ -69,12 +69,14 @@
       console.log(`🎨 CSS path: ${cssPath}`);
       console.log(`⚙️ JS path: ${jsPath}`);
 
-      // Clean up the previous tab if it has a cleanup function
-      if (window.tabCleanupFunctions[targetId]) {
-        console.log(`🧹 Cleaning up previous ${targetId} instance...`);
-        window.tabCleanupFunctions[targetId]();
-        delete window.tabCleanupFunctions[targetId];
-      }
+      // Clean up ALL other tabs (not the target)
+      Object.keys(window.tabCleanupFunctions).forEach(tabId => {
+        if (tabId !== targetId) {
+          console.log(`🧹 Cleaning up ${tabId} tab...`);
+          window.tabCleanupFunctions[tabId]();
+          delete window.tabCleanupFunctions[tabId];
+        }
+      });
 
       try {
         console.log(`⏳ Fetching: ${htmlPath}`);
