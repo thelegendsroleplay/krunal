@@ -88,11 +88,12 @@
         console.log(`✅ HTML injected into #${targetId}`);
 
         // Load CSS
-        if (!document.querySelector(`link[href="${cssPath}"]`)) {
+        if (!document.querySelector(`link[href^="${cssPath}"]`)) {
           console.log(`🎨 Loading CSS: ${cssPath}`);
           const link = document.createElement("link");
           link.rel = "stylesheet";
-          link.href = cssPath;
+          // Add cache-busting query parameter
+          link.href = cssPath + '?v=' + Date.now();
           document.head.appendChild(link);
           console.log("✅ CSS link added");
         } else {
@@ -100,7 +101,7 @@
         }
 
         // Load JS
-        const old = document.querySelector(`script[src="${jsPath}"]`);
+        const old = document.querySelector(`script[src^="${jsPath}"]`);
         if (old) {
           console.log("🗑️ Removing old script");
           old.remove();
@@ -108,7 +109,8 @@
 
         console.log(`⚙️ Loading JS: ${jsPath}`);
         const script = document.createElement("script");
-        script.src = jsPath;
+        // Add cache-busting query parameter
+        script.src = jsPath + '?v=' + Date.now();
         script.defer = true;
         script.onload = () => console.log(`✅ JS loaded: ${jsPath}`);
         script.onerror = (e) => console.error(`❌ JS error: ${jsPath}`, e);
