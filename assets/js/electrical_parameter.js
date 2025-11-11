@@ -1,12 +1,25 @@
+console.log("🎬 electrical_parameter.js loaded");
+
 window.addEventListener('DOMContentLoaded', () => {
-  const banner = (msg)=>{ 
-    const b=document.createElement('div'); 
-    b.textContent=msg; 
+  console.log("⏱️ electrical_parameter.js: DOMContentLoaded fired");
+
+  const banner = (msg)=>{
+    console.log("🚨 Banner:", msg);
+    const b=document.createElement('div');
+    b.textContent=msg;
     b.style.cssText='position:fixed;left:0;right:0;top:0;padding:10px 14px;background:#ff3b30;color:#fff;font:600 14px/1 system-ui;z-index:9999';
     document.body.appendChild(b);
   };
 
-  if (!window.Chart) { banner('Chart.js NOT LOADED — check the CDN in <head>.'); return; }
+  console.log("📦 Chart.js available:", typeof Chart !== 'undefined');
+
+  if (!window.Chart) {
+    banner('Chart.js NOT LOADED — check the CDN in <head>.');
+    console.error("❌ Chart.js not available");
+    return;
+  }
+
+  console.log("✅ Chart.js is available");
 
   // Theme toggle
   const themeBtn = document.getElementById("theme-toggle");
@@ -18,6 +31,8 @@ window.addEventListener('DOMContentLoaded', () => {
   }
 
   // Elements
+  console.log("🔍 Looking for electrical elements...");
+
   const rows  = document.getElementById("rows");
   const kV    = document.getElementById("kpi-voltage");
   const kI    = document.getElementById("kpi-current");
@@ -29,7 +44,25 @@ window.addEventListener('DOMContentLoaded', () => {
   const btnClear    = document.getElementById("clear-table");
   const canvas = document.getElementById("liveElecChart");
 
-  if (!canvas) { banner('Canvas #liveElecChart NOT FOUND in HTML.'); return; }
+  console.log("📊 Electrical elements found:");
+  console.log("  - rows:", !!rows);
+  console.log("  - kV:", !!kV);
+  console.log("  - kI:", !!kI);
+  console.log("  - kP:", !!kP);
+  console.log("  - kPF:", !!kPF);
+  console.log("  - kF:", !!kF);
+  console.log("  - btnToggle:", !!btnToggle);
+  console.log("  - selInterval:", !!selInterval);
+  console.log("  - btnClear:", !!btnClear);
+  console.log("  - canvas:", !!canvas);
+
+  if (!canvas) {
+    banner('Canvas #liveElecChart NOT FOUND in HTML.');
+    console.error("❌ Canvas element not found!");
+    return;
+  }
+
+  console.log("✅ All required elements found");
 
   // Random generator
   let recordId = 0;
@@ -45,8 +78,13 @@ window.addEventListener('DOMContentLoaded', () => {
   }
 
   // Chart
+  console.log("🔨 Creating electrical chart...");
+
   const ctx = canvas.getContext("2d");
   const labels = [], powerData = [], currentData = [];
+
+  console.log("📊 Creating Chart instance...");
+
   const chart = new Chart(ctx, {
     type: "line",
     data: {
@@ -95,11 +133,17 @@ window.addEventListener('DOMContentLoaded', () => {
     chart.update();
   }
 
+  console.log("✅ Electrical chart created successfully");
+
   // Control
   let timer = null;
   function startLoop(delay = +selInterval.value){ stopLoop(); timer = setInterval(pushRow, delay); }
   function stopLoop(){ if (timer) clearInterval(timer); timer = null; }
-  pushRow(); startLoop();
+
+  console.log("🚀 Starting electrical data updates...");
+  pushRow();
+  startLoop();
+  console.log("✅ electrical_parameter.js initialization complete");
 
   btnToggle.addEventListener("click", () => {
     if (timer) { stopLoop(); btnToggle.textContent = "▶️ Resume"; }

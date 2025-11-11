@@ -47,46 +47,106 @@
 
   <script src="assets/js/main.js"></script>
 
-  <!-- Dynamic loader -->
+  <!-- Dynamic loader with DEBUG -->
   <script>
+  console.log("🚀 Script loaded");
+
   document.addEventListener("DOMContentLoaded", () => {
+    console.log("✅ DOM Content Loaded");
+
     const tabs = document.querySelectorAll(".tab-link");
     const contents = document.querySelectorAll(".tab-content");
 
-    async function loadTab(targetId, htmlPath, cssPath, jsPath) {
-      try {
-        const res = await fetch(htmlPath);
-        const html = await res.text();
-        document.getElementById(targetId).innerHTML = html;
+    console.log("📊 Found tabs:", tabs.length);
+    console.log("📦 Found contents:", contents.length);
 
+    async function loadTab(targetId, htmlPath, cssPath, jsPath) {
+      console.log(`🔄 Loading tab: ${targetId}`);
+      console.log(`📄 HTML path: ${htmlPath}`);
+      console.log(`🎨 CSS path: ${cssPath}`);
+      console.log(`⚙️ JS path: ${jsPath}`);
+
+      try {
+        console.log(`⏳ Fetching: ${htmlPath}`);
+        const res = await fetch(htmlPath);
+        console.log(`✅ Fetch response status: ${res.status}`);
+
+        if (!res.ok) {
+          throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+        }
+
+        const html = await res.text();
+        console.log(`📝 HTML loaded, length: ${html.length} chars`);
+
+        const targetElement = document.getElementById(targetId);
+        if (!targetElement) {
+          console.error(`❌ Target element not found: ${targetId}`);
+          return;
+        }
+
+        targetElement.innerHTML = html;
+        console.log(`✅ HTML injected into #${targetId}`);
+
+        // Load CSS
         if (!document.querySelector(`link[href="${cssPath}"]`)) {
+          console.log(`🎨 Loading CSS: ${cssPath}`);
           const link = document.createElement("link");
           link.rel = "stylesheet";
           link.href = cssPath;
           document.head.appendChild(link);
+          console.log("✅ CSS link added");
+        } else {
+          console.log("ℹ️ CSS already loaded");
         }
 
+        // Load JS
         const old = document.querySelector(`script[src="${jsPath}"]`);
-        if (old) old.remove();
+        if (old) {
+          console.log("🗑️ Removing old script");
+          old.remove();
+        }
+
+        console.log(`⚙️ Loading JS: ${jsPath}`);
         const script = document.createElement("script");
         script.src = jsPath;
         script.defer = true;
+        script.onload = () => console.log(`✅ JS loaded: ${jsPath}`);
+        script.onerror = (e) => console.error(`❌ JS error: ${jsPath}`, e);
         document.body.appendChild(script);
+
       } catch (e) {
-        document.getElementById(targetId).innerHTML = "<p style='color:red'>Failed to load.</p>";
+        console.error(`❌ Error loading tab ${targetId}:`, e);
+        const targetElement = document.getElementById(targetId);
+        if (targetElement) {
+          targetElement.innerHTML = `<p style='color:red; padding:20px;'>Failed to load: ${e.message}</p>`;
+        }
       }
     }
 
-    tabs.forEach(tab => {
+    tabs.forEach((tab, index) => {
+      console.log(`🔗 Adding listener to tab ${index}: ${tab.dataset.tab}`);
+
       tab.addEventListener("click", async () => {
+        console.log(`🖱️ Tab clicked: ${tab.dataset.tab}`);
+
         tabs.forEach(t => t.classList.remove("active"));
         contents.forEach(c => c.classList.remove("active"));
         tab.classList.add("active");
+
         const targetId = tab.dataset.tab;
+        console.log(`🎯 Target ID: ${targetId}`);
+
         const target = document.getElementById(targetId);
+        if (!target) {
+          console.error(`❌ Target element not found: #${targetId}`);
+          return;
+        }
+
         target.classList.add("active");
+        console.log(`✅ Tab activated: ${targetId}`);
 
         if (targetId === "electrical") {
+          console.log("⚡ Loading electrical parameters...");
           await loadTab(
             "electrical",
             "electrical_parameter.html",
@@ -94,15 +154,20 @@
             "assets/js/electrical_parameter.js"
           );
         } else if (targetId === "hydraulic") {
+          console.log("💧 Loading hydraulic parameters...");
           await loadTab(
             "hydraulic",
             "hydraulic_parameter.html",
             "assets/css/hydraulic_parameter.css",
             "assets/js/hydraulic_parameter.js"
           );
+        } else {
+          console.log(`ℹ️ No dynamic loading for: ${targetId}`);
         }
       });
     });
+
+    console.log("✅ All tab listeners added");
   });
   </script>
 </body>
