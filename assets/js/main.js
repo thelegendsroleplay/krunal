@@ -46,12 +46,30 @@ function activateTab(targetId, direction = "none") {
 
 // =================== DYNAMIC PAGE LOADING ===================
 
-async function loadPage(url, targetElement) {
+async function loadPage(url, targetElement, cssPath, jsPath) {
   try {
     const response = await fetch(url);
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     const html = await response.text();
     targetElement.innerHTML = html;
+
+    // Load CSS if provided
+    if (cssPath && !document.querySelector(`link[href="${cssPath}"]`)) {
+      const link = document.createElement("link");
+      link.rel = "stylesheet";
+      link.href = cssPath;
+      document.head.appendChild(link);
+    }
+
+    // Load JS if provided
+    if (jsPath) {
+      const old = document.querySelector(`script[src="${jsPath}"]`);
+      if (old) old.remove();
+      const script = document.createElement("script");
+      script.src = jsPath;
+      script.defer = true;
+      document.body.appendChild(script);
+    }
   } catch (error) {
     console.error(`Error loading ${url}:`, error);
     targetElement.innerHTML = `<p style="color:red;">Failed to load ${url}</p>`;
@@ -73,9 +91,19 @@ tabLinks.forEach(link => {
 
     // dynamically load external pages
     if (targetId === "hydraulic") {
-      await loadPage("pages/hydraulic_parameter.html", document.getElementById("hydraulic"));
+      await loadPage(
+        "hydraulic_parameter.html",
+        document.getElementById("hydraulic"),
+        "assets/css/hydraulic_parameter.css",
+        "assets/js/hydraulic_parameter.js"
+      );
     } else if (targetId === "electrical") {
-      await loadPage("pages/electrical_parameter.html", document.getElementById("electrical"));
+      await loadPage(
+        "electrical_parameter.html",
+        document.getElementById("electrical"),
+        "assets/css/electrical_parameter.css",
+        "assets/js/electrical_parameter.js"
+      );
     }
   });
 
