@@ -508,13 +508,11 @@ canvas { width: 100% !important; height: 330px !important; display: block; }
 
 .tab-content {
 
-  display: block; /* keep block for layout but hidden via opacity/transform */
+  display: none; /* Hide inactive tabs completely */
 
   opacity: 0;
 
   transform: translateX(24px) scale(.995);
-
-  pointer-events: none;
 
   transition: transform .38s cubic-bezier(.2,.9,.2,1), opacity .28s ease;
 
@@ -524,11 +522,11 @@ canvas { width: 100% !important; height: 330px !important; display: block; }
 
 .tab-content.active {
 
+  display: block; /* Show active tab */
+
   opacity: 1;
 
   transform: translateX(0) scale(1);
-
-  pointer-events: auto;
 
 }
 
