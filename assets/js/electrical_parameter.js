@@ -159,6 +159,18 @@
     startLoop();
     console.log("✅ electrical_parameter.js initialization complete");
 
+    // Register cleanup function for this tab
+    if (window.tabCleanupFunctions) {
+      window.tabCleanupFunctions.electrical = function() {
+        console.log("🧹 Electrical cleanup: stopping timer and destroying chart");
+        stopLoop();
+        if (chart && typeof chart.destroy === 'function') {
+          chart.destroy();
+        }
+      };
+      console.log("✅ Electrical cleanup function registered");
+    }
+
     if (btnToggle) {
       console.log("✅ Adding click handler to toggle button");
       btnToggle.addEventListener("click", () => {
