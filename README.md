@@ -4,9 +4,17 @@ A real-time monitoring dashboard for hydraulic dam parameters including electric
 
 ## Quick Start
 
-**IMPORTANT:** This application must be run through a local web server, not by opening `index.html` directly in the browser. Direct file access will cause CORS errors.
+### Direct File Access (Easiest - For College Presentations)
 
-### Option 1: Using the Startup Script (Easiest)
+Simply **double-click `index.html`** to open it in your browser!
+
+All content is embedded in the single HTML file, so it works perfectly with the `file://` protocol without needing any server setup.
+
+### Using a Local Web Server (Optional)
+
+If you prefer to use a web server, you have several options:
+
+#### Option 1: Using the Startup Script
 
 ```bash
 ./start-server.sh
@@ -14,7 +22,7 @@ A real-time monitoring dashboard for hydraulic dam parameters including electric
 
 This will prompt you to choose between Python or Node.js server and automatically start it.
 
-### Option 2: Using NPM
+#### Option 2: Using NPM
 
 ```bash
 npm run dev
@@ -22,7 +30,7 @@ npm run dev
 
 This will start the server and automatically open it in your browser at http://localhost:8080
 
-### Option 3: Using Python Directly
+#### Option 3: Using Python Directly
 
 ```bash
 python3 -m http.server 8080
@@ -30,7 +38,7 @@ python3 -m http.server 8080
 
 Then open http://localhost:8080 in your browser.
 
-### Option 4: Using Node.js http-server
+#### Option 4: Using Node.js http-server
 
 ```bash
 npx http-server -p 8080 -c-1
@@ -66,10 +74,6 @@ Each parameter tab includes:
 - Unique element IDs to prevent conflicts between tabs
 
 ## Troubleshooting
-
-### "Failed to fetch" errors
-- Make sure you're running the application through a web server (see Quick Start above)
-- Don't open `index.html` directly in the browser
 
 ### Charts not displaying
 - Ensure Chart.js CDN is accessible

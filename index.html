@@ -6,6 +6,8 @@
   <title>Hydraulic Dam Dashboard</title>
 
   <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/electrical_parameter.css">
+  <link rel="stylesheet" href="assets/css/hydraulic_parameter.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
@@ -40,19 +42,132 @@
       </section>
     </div>
 
-    <!-- Dynamic Tabs -->
-    <div class="tab-content" id="hydraulic"></div>
-    <div class="tab-content" id="electrical"></div>
+    <!-- Hydraulic Tab -->
+    <div class="tab-content" id="hydraulic">
+      <!-- Hydraulic Parameter Content -->
+      <header class="top">
+        <h1>💧 Hydraulic Parameters Monitor</h1>
+        <div class="actions">
+          <button id="hydraulic-toggle-run">⏸ Pause</button>
+          <label class="speed">
+            Speed
+            <select id="hydraulic-interval-ms">
+              <option value="1500" selected>1.5s</option>
+              <option value="1000">1.0s</option>
+              <option value="500">0.5s</option>
+            </select>
+          </label>
+          <button id="hydraulic-theme-toggle">🌙</button>
+        </div>
+      </header>
+
+      <section class="cards">
+        <div class="card"><span class="label">Head (m)</span><span class="value" id="kpi-head">—</span></div>
+        <div class="card"><span class="label">Flow (m³/s)</span><span class="value" id="kpi-flow">—</span></div>
+        <div class="card"><span class="label">Pressure (Pa)</span><span class="value" id="kpi-press">—</span></div>
+        <div class="card"><span class="label">Efficiency (%)</span><span class="value" id="kpi-eff">—</span></div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head"><h2>Realtime Hydraulic Trend</h2></div>
+        <canvas id="liveHydraulicChart"></canvas>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <h2>Recent Samples</h2>
+          <button id="hydraulic-clear-table" class="ghost">Clear</button>
+        </div>
+        <div class="table-wrap">
+          <table id="hydraulicTable">
+            <thead>
+              <tr>
+                <th>Time</th>
+                <th>Head (m)</th>
+                <th>Flow (m³/s)</th>
+                <th>Pressure (Pa)</th>
+                <th>Velocity (m/s)</th>
+                <th>Head Loss (m)</th>
+                <th>Efficiency (%)</th>
+              </tr>
+            </thead>
+            <tbody id="hydraulic-rows"></tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+
+    <!-- Electrical Tab -->
+    <div class="tab-content" id="electrical">
+      <!-- Electrical Parameter Content -->
+      <header class="top">
+        <h1>Generator Electrical Panel</h1>
+        <div class="actions">
+          <button id="electrical-toggle-run">⏸ Pause</button>
+          <label class="speed">
+            Speed
+            <select id="electrical-interval-ms">
+              <option value="1500" selected>1.5s</option>
+              <option value="1000">1.0s</option>
+              <option value="500">0.5s</option>
+            </select>
+          </label>
+          <button id="electrical-theme-toggle">🌙</button>
+        </div>
+      </header>
+
+      <section class="cards">
+        <div class="card"><span class="label">Voltage (V)</span><span class="value" id="kpi-voltage">—</span></div>
+        <div class="card"><span class="label">Current (A)</span><span class="value" id="kpi-current">—</span></div>
+        <div class="card"><span class="label">Power (kW)</span><span class="value" id="kpi-power">—</span></div>
+        <div class="card"><span class="label">Power Factor</span><span class="value" id="kpi-pf">—</span></div>
+        <div class="card"><span class="label">Frequency (Hz)</span><span class="value" id="kpi-freq">—</span></div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head"><h2>Realtime Electrical Trend</h2></div>
+        <canvas id="liveElecChart"></canvas>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <h2>Recent Samples</h2>
+          <button id="electrical-clear-table" class="ghost">Clear</button>
+        </div>
+        <div class="table-wrap">
+          <table id="electricalTable">
+            <thead>
+              <tr>
+                <th>Record ID</th>
+                <th>Voltage (V)</th>
+                <th>Current (A)</th>
+                <th>Power (kW)</th>
+                <th>Power Factor</th>
+                <th>Frequency (Hz)</th>
+                <th>Timestamp</th>
+              </tr>
+            </thead>
+            <tbody id="electrical-rows"></tbody>
+          </table>
+        </div>
+      </section>
+    </div>
   </main>
 
   <script src="assets/js/main.js"></script>
 
-  <!-- Dynamic loader with DEBUG -->
+  <!-- Tab switching and dynamic JS loading -->
   <script>
   console.log("🚀 Script loaded");
 
   // Store cleanup functions for each tab (globally accessible)
   window.tabCleanupFunctions = {};
+
+  // Track which tabs have been initialized
+  window.tabsInitialized = {
+    hydraulic: false,
+    electrical: false
+  };
 
   document.addEventListener("DOMContentLoaded", () => {
     console.log("✅ DOM Content Loaded");
@@ -63,78 +178,30 @@
     console.log("📊 Found tabs:", tabs.length);
     console.log("📦 Found contents:", contents.length);
 
-    async function loadTab(targetId, htmlPath, cssPath, jsPath) {
-      console.log(`🔄 Loading tab: ${targetId}`);
-      console.log(`📄 HTML path: ${htmlPath}`);
-      console.log(`🎨 CSS path: ${cssPath}`);
-      console.log(`⚙️ JS path: ${jsPath}`);
+    function loadTabJS(targetId, jsPath) {
+      return new Promise((resolve, reject) => {
+        console.log(`⚙️ Loading JS for ${targetId}: ${jsPath}`);
 
-      // Clean up ALL other tabs (not the target)
-      Object.keys(window.tabCleanupFunctions).forEach(tabId => {
-        if (tabId !== targetId) {
-          console.log(`🧹 Cleaning up ${tabId} tab...`);
-          window.tabCleanupFunctions[tabId]();
-          delete window.tabCleanupFunctions[tabId];
-        }
-      });
-
-      try {
-        console.log(`⏳ Fetching: ${htmlPath}`);
-        const res = await fetch(htmlPath);
-        console.log(`✅ Fetch response status: ${res.status}`);
-
-        if (!res.ok) {
-          throw new Error(`HTTP ${res.status}: ${res.statusText}`);
-        }
-
-        const html = await res.text();
-        console.log(`📝 HTML loaded, length: ${html.length} chars`);
-
-        const targetElement = document.getElementById(targetId);
-        if (!targetElement) {
-          console.error(`❌ Target element not found: ${targetId}`);
-          return;
-        }
-
-        targetElement.innerHTML = html;
-        console.log(`✅ HTML injected into #${targetId}`);
-
-        // Load CSS
-        if (!document.querySelector(`link[href^="${cssPath}"]`)) {
-          console.log(`🎨 Loading CSS: ${cssPath}`);
-          const link = document.createElement("link");
-          link.rel = "stylesheet";
-          // Add cache-busting query parameter
-          link.href = cssPath + '?v=' + Date.now();
-          document.head.appendChild(link);
-          console.log("✅ CSS link added");
-        } else {
-          console.log("ℹ️ CSS already loaded");
-        }
-
-        // Load JS
-        const old = document.querySelector(`script[src^="${jsPath}"]`);
+        // Remove old script if exists
+        const old = document.querySelector(`script[src*="${jsPath}"]`);
         if (old) {
           console.log("🗑️ Removing old script");
           old.remove();
         }
 
-        console.log(`⚙️ Loading JS: ${jsPath}`);
         const script = document.createElement("script");
-        // Add cache-busting query parameter
-        script.src = jsPath + '?v=' + Date.now();
-        script.defer = true;
-        script.onload = () => console.log(`✅ JS loaded: ${jsPath}`);
-        script.onerror = (e) => console.error(`❌ JS error: ${jsPath}`, e);
+        script.src = jsPath;
+        script.onload = () => {
+          console.log(`✅ JS loaded: ${jsPath}`);
+          window.tabsInitialized[targetId] = true;
+          resolve();
+        };
+        script.onerror = (e) => {
+          console.error(`❌ JS error: ${jsPath}`, e);
+          reject(e);
+        };
         document.body.appendChild(script);
-
-      } catch (e) {
-        console.error(`❌ Error loading tab ${targetId}:`, e);
-        const targetElement = document.getElementById(targetId);
-        if (targetElement) {
-          targetElement.innerHTML = `<p style='color:red; padding:20px;'>Failed to load: ${e.message}</p>`;
-        }
-      }
+      });
     }
 
     tabs.forEach((tab, index) => {
@@ -159,22 +226,29 @@
         target.classList.add("active");
         console.log(`✅ Tab activated: ${targetId}`);
 
-        if (targetId === "electrical") {
+        // Clean up other tabs
+        Object.keys(window.tabCleanupFunctions).forEach(tabId => {
+          if (tabId !== targetId && window.tabCleanupFunctions[tabId]) {
+            console.log(`🧹 Cleaning up ${tabId} tab...`);
+            window.tabCleanupFunctions[tabId]();
+          }
+        });
+
+        // Load tab-specific JavaScript if needed
+        if (targetId === "electrical" && !window.tabsInitialized.electrical) {
           console.log("⚡ Loading electrical parameters...");
-          await loadTab(
-            "electrical",
-            "electrical_parameter.html",
-            "assets/css/electrical_parameter.css",
-            "assets/js/electrical_parameter.js"
-          );
-        } else if (targetId === "hydraulic") {
+          try {
+            await loadTabJS("electrical", "assets/js/electrical_parameter.js");
+          } catch (e) {
+            console.error("Failed to load electrical JS:", e);
+          }
+        } else if (targetId === "hydraulic" && !window.tabsInitialized.hydraulic) {
           console.log("💧 Loading hydraulic parameters...");
-          await loadTab(
-            "hydraulic",
-            "hydraulic_parameter.html",
-            "assets/css/hydraulic_parameter.css",
-            "assets/js/hydraulic_parameter.js"
-          );
+          try {
+            await loadTabJS("hydraulic", "assets/js/hydraulic_parameter.js");
+          } catch (e) {
+            console.error("Failed to load hydraulic JS:", e);
+          }
         } else {
           console.log(`ℹ️ No dynamic loading for: ${targetId}`);
         }
