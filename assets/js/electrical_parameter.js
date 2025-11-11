@@ -140,20 +140,63 @@
 
     // Control
     let timer = null;
-    function startLoop(delay = +selInterval.value){ stopLoop(); timer = setInterval(pushRow, delay); }
-    function stopLoop(){ if (timer) clearInterval(timer); timer = null; }
+    function startLoop(delay) {
+      stopLoop();
+      const finalDelay = delay || (selInterval ? +selInterval.value : 1500);
+      console.log(`🔄 Starting loop with delay: ${finalDelay}ms`);
+      timer = setInterval(pushRow, finalDelay);
+    }
+    function stopLoop() {
+      if (timer) {
+        clearInterval(timer);
+        console.log("⏸ Loop stopped");
+      }
+      timer = null;
+    }
 
     console.log("🚀 Starting electrical data updates...");
     pushRow();
     startLoop();
     console.log("✅ electrical_parameter.js initialization complete");
 
-    btnToggle.addEventListener("click", () => {
-      if (timer) { stopLoop(); btnToggle.textContent = "▶️ Resume"; }
-      else       { startLoop(); btnToggle.textContent = "⏸ Pause"; }
-    });
-    selInterval.addEventListener("change", () => { if (timer) startLoop(+selInterval.value); });
-    btnClear.addEventListener("click", () => { rows.innerHTML=""; labels.length = powerData.length = currentData.length = 0; chart.update(); });
+    if (btnToggle) {
+      console.log("✅ Adding click handler to toggle button");
+      btnToggle.addEventListener("click", () => {
+        console.log(`🖱️ Toggle clicked, timer active: ${!!timer}`);
+        if (timer) {
+          stopLoop();
+          btnToggle.textContent = "▶️ Resume";
+        } else {
+          startLoop();
+          btnToggle.textContent = "⏸ Pause";
+        }
+      });
+    } else {
+      console.warn("⚠️ Toggle button not found");
+    }
+
+    if (selInterval) {
+      console.log("✅ Adding change handler to interval selector");
+      selInterval.addEventListener("change", () => {
+        const newDelay = +selInterval.value;
+        console.log(`🖱️ Interval changed to: ${newDelay}ms`);
+        if (timer) startLoop(newDelay);
+      });
+    } else {
+      console.warn("⚠️ Interval selector not found");
+    }
+
+    if (btnClear) {
+      console.log("✅ Adding click handler to clear button");
+      btnClear.addEventListener("click", () => {
+        console.log("🖱️ Clear button clicked");
+        rows.innerHTML = "";
+        labels.length = powerData.length = currentData.length = 0;
+        chart.update();
+      });
+    } else {
+      console.warn("⚠️ Clear button not found");
+    }
   }
 
   // Check if DOM is already ready (for dynamic loading)
