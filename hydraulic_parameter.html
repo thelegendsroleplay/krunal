@@ -1,20 +1,38 @@
-<section class="panel-section">
-  <h2>💧 Hydraulic Parameters</h2>
-
-  <div class="cards">
-    <div class="card"><span>Head (m): </span><span id="kpi-head">—</span></div>
-    <div class="card"><span>Flow (m³/s): </span><span id="kpi-flow">—</span></div>
-    <div class="card"><span>Pressure (Pa): </span><span id="kpi-press">—</span></div>
-    <div class="card"><span>Efficiency (%): </span><span id="kpi-eff">—</span></div>
+<!-- Hydraulic Parameter Content -->
+<header class="top">
+  <h1>💧 Hydraulic Parameters Monitor</h1>
+  <div class="actions">
+    <button id="toggle-run">⏸ Pause</button>
+    <label class="speed">
+      Speed
+      <select id="interval-ms">
+        <option value="1500" selected>1.5s</option>
+        <option value="1000">1.0s</option>
+        <option value="500">0.5s</option>
+      </select>
+    </label>
+    <button id="theme-toggle">🌙</button>
   </div>
+</header>
 
-  <div class="chart">
-    <h3>Realtime Hydraulic Trend</h3>
-    <canvas id="liveHydraulicChart"></canvas>
+<section class="cards">
+  <div class="card"><span class="label">Head (m)</span><span class="value" id="kpi-head">—</span></div>
+  <div class="card"><span class="label">Flow (m³/s)</span><span class="value" id="kpi-flow">—</span></div>
+  <div class="card"><span class="label">Pressure (Pa)</span><span class="value" id="kpi-press">—</span></div>
+  <div class="card"><span class="label">Efficiency (%)</span><span class="value" id="kpi-eff">—</span></div>
+</section>
+
+<section class="panel">
+  <div class="panel-head"><h2>Realtime Hydraulic Trend</h2></div>
+  <canvas id="liveChart"></canvas>
+</section>
+
+<section class="panel">
+  <div class="panel-head">
+    <h2>Recent Samples</h2>
+    <button id="clear-table" class="ghost">Clear</button>
   </div>
-
-  <div class="table-section">
-    <h3>Recent Samples</h3>
+  <div class="table-wrap">
     <table id="hydraulicTable">
       <thead>
         <tr>
@@ -22,6 +40,8 @@
           <th>Head (m)</th>
           <th>Flow (m³/s)</th>
           <th>Pressure (Pa)</th>
+          <th>Velocity (m/s)</th>
+          <th>Head Loss (m)</th>
           <th>Efficiency (%)</th>
         </tr>
       </thead>
