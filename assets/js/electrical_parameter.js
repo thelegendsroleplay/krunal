@@ -1,7 +1,8 @@
 console.log("🎬 electrical_parameter.js loaded");
 
-window.addEventListener('DOMContentLoaded', () => {
-  console.log("⏱️ electrical_parameter.js: DOMContentLoaded fired");
+// Function to initialize electrical parameters
+function initElectrical() {
+  console.log("⏱️ electrical_parameter.js: Initializing...");
 
   const banner = (msg)=>{
     console.log("🚨 Banner:", msg);
@@ -151,4 +152,14 @@ window.addEventListener('DOMContentLoaded', () => {
   });
   selInterval.addEventListener("change", () => { if (timer) startLoop(+selInterval.value); });
   btnClear.addEventListener("click", () => { rows.innerHTML=""; labels.length = powerData.length = currentData.length = 0; chart.update(); });
-});
+}
+
+// Check if DOM is already ready (for dynamic loading)
+if (document.readyState === 'loading') {
+  console.log("📌 DOM still loading, waiting for DOMContentLoaded...");
+  document.addEventListener('DOMContentLoaded', initElectrical);
+} else {
+  console.log("📌 DOM already ready, initializing immediately...");
+  // DOM is already ready, execute immediately
+  initElectrical();
+}
