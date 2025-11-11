@@ -45,7 +45,7 @@
     const btnToggle = document.getElementById("toggle-run");
     const selInterval = document.getElementById("interval-ms");
     const btnClear = document.getElementById("clear-table");
-    const canvasEl = document.getElementById("liveChart");
+    const canvasEl = document.getElementById("liveHydraulicChart");
 
     console.log("📊 Hydraulic elements found:");
     console.log("  - rows:", !!rows);
@@ -59,7 +59,7 @@
     console.log("  - canvasEl:", !!canvasEl);
 
     if (!canvasEl) {
-      banner('Canvas #liveChart NOT FOUND in HTML.');
+      banner('Canvas #liveHydraulicChart NOT FOUND in HTML.');
       console.error("❌ Canvas element not found!");
       return;
     }
@@ -155,13 +155,18 @@
     // ========== Interval control ==========
     let timer = null;
 
-    function startLoop(delay = +selInterval.value) {
+    function startLoop(delay) {
       stopLoop();
-      timer = setInterval(pushRow, delay);
+      const finalDelay = delay || (selInterval ? +selInterval.value : 1500);
+      console.log(`🔄 Starting loop with delay: ${finalDelay}ms`);
+      timer = setInterval(pushRow, finalDelay);
     }
 
     function stopLoop() {
-      if (timer) clearInterval(timer);
+      if (timer) {
+        clearInterval(timer);
+        console.log("⏸ Loop stopped");
+      }
       timer = null;
     }
 
@@ -175,7 +180,9 @@
 
     // Controls
     if (btnToggle) {
+      console.log("✅ Adding click handler to toggle button");
       btnToggle.addEventListener("click", () => {
+        console.log(`🖱️ Toggle clicked, timer active: ${!!timer}`);
         if (timer) {
           stopLoop();
           btnToggle.textContent = "▶️ Resume";
@@ -184,20 +191,31 @@
           btnToggle.textContent = "⏸ Pause";
         }
       });
+    } else {
+      console.warn("⚠️ Toggle button not found");
     }
 
     if (selInterval) {
+      console.log("✅ Adding change handler to interval selector");
       selInterval.addEventListener("change", () => {
-        if (timer) startLoop(+selInterval.value);
+        const newDelay = +selInterval.value;
+        console.log(`🖱️ Interval changed to: ${newDelay}ms`);
+        if (timer) startLoop(newDelay);
       });
+    } else {
+      console.warn("⚠️ Interval selector not found");
     }
 
     if (btnClear) {
+      console.log("✅ Adding click handler to clear button");
       btnClear.addEventListener("click", () => {
+        console.log("🖱️ Clear button clicked");
         if (rows) rows.innerHTML = "";
         labels.length = headData.length = flowData.length = effData.length = 0;
         chart.update();
       });
+    } else {
+      console.warn("⚠️ Clear button not found");
     }
   }
 
