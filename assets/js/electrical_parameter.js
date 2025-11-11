@@ -25,7 +25,7 @@
     console.log("✅ Chart.js is available");
 
     // Theme toggle
-    const themeBtn = document.getElementById("theme-toggle");
+    const themeBtn = document.getElementById("electrical-theme-toggle");
     if (themeBtn) {
       themeBtn.addEventListener("click", () => {
         document.body.classList.toggle("light");
@@ -36,15 +36,15 @@
     // Elements
     console.log("🔍 Looking for electrical elements...");
 
-    const rows  = document.getElementById("rows");
+    const rows  = document.getElementById("electrical-rows");
     const kV    = document.getElementById("kpi-voltage");
     const kI    = document.getElementById("kpi-current");
     const kP    = document.getElementById("kpi-power");
     const kPF   = document.getElementById("kpi-pf");
     const kF    = document.getElementById("kpi-freq");
-    const btnToggle   = document.getElementById("toggle-run");
-    const selInterval = document.getElementById("interval-ms");
-    const btnClear    = document.getElementById("clear-table");
+    const btnToggle   = document.getElementById("electrical-toggle-run");
+    const selInterval = document.getElementById("electrical-interval-ms");
+    const btnClear    = document.getElementById("electrical-clear-table");
     const canvas = document.getElementById("liveElecChart");
 
     console.log("📊 Electrical elements found:");
