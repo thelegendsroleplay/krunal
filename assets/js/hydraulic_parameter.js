@@ -178,6 +178,18 @@
     startLoop();
     console.log("✅ hydraulic_parameter.js initialization complete");
 
+    // Register cleanup function for this tab
+    if (window.tabCleanupFunctions) {
+      window.tabCleanupFunctions.hydraulic = function() {
+        console.log("🧹 Hydraulic cleanup: stopping timer and destroying chart");
+        stopLoop();
+        if (chart && typeof chart.destroy === 'function') {
+          chart.destroy();
+        }
+      };
+      console.log("✅ Hydraulic cleanup function registered");
+    }
+
     // Controls
     if (btnToggle) {
       console.log("✅ Adding click handler to toggle button");

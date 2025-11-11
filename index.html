@@ -51,6 +51,9 @@
   <script>
   console.log("🚀 Script loaded");
 
+  // Store cleanup functions for each tab (globally accessible)
+  window.tabCleanupFunctions = {};
+
   document.addEventListener("DOMContentLoaded", () => {
     console.log("✅ DOM Content Loaded");
 
@@ -65,6 +68,13 @@
       console.log(`📄 HTML path: ${htmlPath}`);
       console.log(`🎨 CSS path: ${cssPath}`);
       console.log(`⚙️ JS path: ${jsPath}`);
+
+      // Clean up the previous tab if it has a cleanup function
+      if (window.tabCleanupFunctions[targetId]) {
+        console.log(`🧹 Cleaning up previous ${targetId} instance...`);
+        window.tabCleanupFunctions[targetId]();
+        delete window.tabCleanupFunctions[targetId];
+      }
 
       try {
         console.log(`⏳ Fetching: ${htmlPath}`);
